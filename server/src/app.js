@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const morgan = require("morgan");
 const cors = require("cors");
 const planetsRouter = require("./routes/planets/planets.router");
 
@@ -18,10 +19,16 @@ function corsOptionsDelegate(req, callback) {
 
 app.use(cors(corsOptionsDelegate));
 
+app.use(morgan("combined"));
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "..", "public")));
 
 //ROUTES
 app.use(planetsRouter);
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "index.html"));
+});
 
 module.exports = app;
