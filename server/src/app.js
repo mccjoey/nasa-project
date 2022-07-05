@@ -3,6 +3,7 @@ const path = require("path");
 const morgan = require("morgan");
 const cors = require("cors");
 const planetsRouter = require("./routes/planets/planets.router");
+const launchesRouter = require("./routes/launches/launches.router");
 
 const app = express();
 const whitelist = ["http://localhost:3000"];
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 
 //ROUTES
 app.use(planetsRouter);
+app.use(launchesRouter);
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "index.html"));
