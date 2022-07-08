@@ -5,8 +5,6 @@ const planetsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  
 });
 
-
-module.exports = mongoose.model('Planet', planetsSchema)
+module.exports = mongoose.model("Planet", planetsSchema);
