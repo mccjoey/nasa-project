@@ -71,12 +71,15 @@ async function scheduleNewlaunch(launch) {
 }
 
 async function abortLaunchById(launchId) {
-  const aborted = await launchesDataBase.updateOne({
-    flightNumber: launchId
-  }, {
-    upcoming: false,
-    success: false,
-  })
+  const aborted = await launchesDataBase.updateOne(
+    {
+      flightNumber: launchId,
+    },
+    {
+      upcoming: false,
+      success: false,
+    }
+  );
 
   return aborted.modifiedCount === 1;
 }

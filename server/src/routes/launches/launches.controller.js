@@ -31,8 +31,14 @@ async function httpAddNewLaunch(req, res) {
     });
   }
 
-  await scheduleNewlaunch(launch);
-  return res.status(201).json(launch);
+  try {
+    await scheduleNewlaunch(launch);
+    return res.status(201).json(launch);
+  } catch (error) {
+    return res.status(400).json({
+      error: error.message
+    })
+  } 
 }
 
 async function httpAbortLaunch(req, res) {
