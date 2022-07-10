@@ -12,7 +12,10 @@ const MONGO_URL =
   "mongodb+srv://nasa-api:sUs6YmJYnKNR1PvN@nasacluster.m3pzi.mongodb.net/?retryWrites=true&w=majority";
 
 async function mongoConnect() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 }
 async function mongoDisconnect() {
   await mongoose.disconnect();
