@@ -1,17 +1,63 @@
+const axios = require("axios");
 const launchesDataBase = require("./launches.mongo");
 const planets = require("./planets.mongo");
 const DEFAULT_FLIGHT_NUMBER = 100;
 
 const launch = {
-  flightNumber: 100,
-  mission: "Kepler Exploration X",
-  rocket: "Explorer IS1",
-  launchDate: new Date("December 27, 2030"),
-  target: "Kepler-442 b",
-  customers: ["ZTM", "NASA"],
-  upcoming: true,
-  success: true,
+  flightNumber: 100, //flight_number
+  mission: "Kepler Exploration X", //name
+  rocket: "Explorer IS1", //rocket.name
+  launchDate: new Date("December 27, 2030"), //date_local
+  target: "Kepler-442 b", //not applicable
+  customers: ["ZTM", "NASA"], //payload.customers
+  upcoming: true, //upcoming
+  success: true, //success
 };
+
+const SPACEX_URL = "https://api.spacexdata.com/v4/launches/query";
+
+async function loadLaunchData() {
+  console.log("Donwloading launch data...");
+  const response = await axios.post(SPACEX_URL, {
+    query: {},
+    options: {
+      populate: [
+        {
+          path: "rocket",
+          select: {
+            name: 1,
+          },
+        },
+        {
+          path: "payloads",
+          select: {
+            customers: 1,
+          },
+        },
+      ],
+    },
+  });
+
+  const launchDocs = response.data.docs;
+  for (const launchDoc of launchDocs) {
+    const payloads = launchDoc["payloads"];
+    const customers = payloads.flatMap((payload) => {
+      return payload["customers"];
+    });
+
+    const launch = {
+      flightNumber: launchDoc["flight_number"],
+      mission: launchDoc["name"],
+      rocket: launchDoc["rocket"]["name"],
+      launchDate: launchDoc["date_local"],
+      upcoming: launchDoc["upcoming"],
+      success: launchDoc["success"],
+      customers,
+    };
+
+    console.log(launch)
+  }
+}
 
 async function existsLaunchWithId(launchId) {
   return await launchesDataBase.findOne({
@@ -89,4 +135,5 @@ module.exports = {
   abortLaunchById,
   existsLaunchWithId,
   scheduleNewlaunch,
+  loadLaunchData,
 };
