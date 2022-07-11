@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require('dotenv').config();
 
 mongoose.connection.once("open", () => {
   console.log("MongoDB connection ready!");
@@ -8,11 +9,9 @@ mongoose.connection.on("error", (err) => {
   console.error(err);
 });
 
-const MONGO_URL =
-  "mongodb+srv://nasa-api:sUs6YmJYnKNR1PvN@nasacluster.m3pzi.mongodb.net/?retryWrites=true&w=majority";
 
 async function mongoConnect() {
-  await mongoose.connect(MONGO_URL, {
+  await mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
