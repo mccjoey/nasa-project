@@ -14,6 +14,7 @@ node_modules/
 
 # misc
 **/.env
+*.pem
 .env
 .DS_Store
 .env.local
