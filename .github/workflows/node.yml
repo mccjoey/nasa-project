@@ -13,8 +13,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 17.x]
-        mongodb-version: ['4.2', '4.4', '5.0']
+        node-version: [16.x]
+        mongodb-version: ['5.0']
     
     steps:
       - name: Git checkout
@@ -30,10 +30,16 @@ jobs:
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
 
-      - run: npm install
+      - name: Install packages
+        run: npm install
 
-      - run: npm run build --prefix client
+      - name: Build React App into server folder
+        run: npm run build --prefix client
       
-      - run: npm test
-  # deploy:
-  #   needs: build
+      - name: Run tests
+        run: npm test
+
+      - name: Deploy
+        run: railway up
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
